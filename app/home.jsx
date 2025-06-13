@@ -26,7 +26,7 @@ export default function HomeScreen() {
   useEffect(() => {
     const checkLogin = async () => {
       const token = await AsyncStorage.getItem('token');
-      if (!token) router.replace('/login');
+      if (!token) router.replace('/');
     };
     checkLogin();
     loadProducts();

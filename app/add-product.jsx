@@ -10,6 +10,7 @@ import {
     View
 } from 'react-native';
 import { Snackbar } from 'react-native-paper';
+import Category from '../components/Dropdown';
 import { getProducts, saveProducts } from '../utils/storage';
 
 export default function AddProductScreen() {
@@ -18,7 +19,7 @@ export default function AddProductScreen() {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ visible: false, message: '' });
-
+  const  [category,setCategory] = useState("")
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.Images,
@@ -50,6 +51,7 @@ export default function AddProductScreen() {
       name,
       price,
       image,
+      category: category || 'Uncategory',
     };
 
     const updated = [...products, newProduct];
@@ -61,7 +63,10 @@ export default function AddProductScreen() {
   return (
       <SafeAreaView style={styles.safe}>
     <View style={styles.container}>
-      <Text style={styles.title}>Add New Product</Text>
+ <Text style={styles.title}>Add New Product</Text>
+       <View style={styles.dropdownWrapper}>
+  <Category onSelect={setCategory} />
+</View>
 
       <TextInput
         placeholder="Product Name"
@@ -75,8 +80,9 @@ export default function AddProductScreen() {
         onChangeText={setPrice}
         keyboardType="numeric"
         style={styles.input}
-      />
-
+      /> 
+      
+ 
       <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
         {image ? (
           <Image source={{ uri: image }} style={styles.image} />
@@ -134,4 +140,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnText: { color: '#fff', fontSize: 16 },
+  dropdownWrapper: {
+  marginBottom: 15,
+},
+
 });
