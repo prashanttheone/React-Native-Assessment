@@ -2,6 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
+import { Snackbar } from 'react-native-paper';
+
 import {
     FlatList,
     Image,
@@ -11,7 +13,7 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View,
+    View
 } from 'react-native';
 import { getProducts, saveProducts } from '../utils/storage';
 
@@ -19,6 +21,7 @@ export default function HomeScreen() {
   const [products, setProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+   const [snackbar, setSnackbar] = useState({ visible: false, message: '' });
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -34,13 +37,14 @@ export default function HomeScreen() {
     setProducts(data);
     setFiltered(data);
   };
+const handleDelete = async (id) => {
+  const updated = products.filter((p) => p.id !== id);
+  setProducts(updated);
+  setFiltered(updated);
+  await saveProducts(updated);
+  setSnackbar({ visible: true, message: 'Item deleted successfully' });
 
-  const handleDelete = async (id) => {
-    const updated = products.filter((p) => p.id !== id);
-    setProducts(updated);
-    setFiltered(updated);
-    await saveProducts(updated);
-  };
+};
 
   const handleSearch = (text) => {
     setSearchQuery(text);
@@ -70,9 +74,16 @@ export default function HomeScreen() {
   );
 
   return (
-
     <SafeAreaView style={styles.safe}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+            {/* Snackbar */}
+      <Snackbar
+        visible={snackbar.visible}
+        onDismiss={() => setSnackbar({ ...snackbar, visible: false })}
+        duration={3000}
+      >
+        {snackbar.message}
+      </Snackbar>
       <View style={styles.container}>
         <TouchableOpacity style={styles.logout} onPress={handleLogout}>
           <Ionicons name="log-out-outline" size={24} color="#fff" />
@@ -106,13 +117,12 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </View>
     </SafeAreaView>
-      
   );
 }
 
 const styles = StyleSheet.create({
   safe: {
-    paddingTop: 50, 
+    paddingTop: 50,
     flex: 10,
     backgroundColor: '#fff',
   },
@@ -149,7 +159,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     backgroundColor: '#fff',
     borderRadius: 12,
-    padding: 10,
+    padding: 5,
     borderWidth: 1,
     borderColor: '#eee',
     position: 'relative',
