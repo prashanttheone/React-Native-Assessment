@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import {
     ActivityIndicator,
     Image,
+    SafeAreaView,
     StyleSheet,
     Text, TextInput, TouchableOpacity,
     View
@@ -20,8 +21,8 @@ export default function AddProductScreen() {
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
+      mediaTypes: ImagePicker.Images,
+      allowsEditing:false,
       aspect: [4, 3],
       quality: 1,
     });
@@ -58,6 +59,7 @@ export default function AddProductScreen() {
   };
 
   return (
+      <SafeAreaView style={styles.safe}>
     <View style={styles.container}>
       <Text style={styles.title}>Add New Product</Text>
 
@@ -95,11 +97,12 @@ export default function AddProductScreen() {
         {snackbar.message}
       </Snackbar>
     </View>
+  </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#fff' },
+  container: { flex: 1, padding: 20, backgroundColor: '#fff'},
   title: { fontSize: 22, fontWeight: 'bold', marginBottom: 20 },
   input: {
     borderWidth: 1,
@@ -107,6 +110,11 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     marginBottom: 15,
+  },
+    safe: {
+    paddingTop: 50, 
+    flex: 1,
+    backgroundColor: '#fff',
   },
   imagePicker: {
     borderWidth: 1,

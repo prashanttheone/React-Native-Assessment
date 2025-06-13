@@ -5,6 +5,8 @@ import React, { useEffect, useState } from 'react';
 import {
     FlatList,
     Image,
+    SafeAreaView,
+    StatusBar,
     StyleSheet,
     Text,
     TextInput,
@@ -50,7 +52,7 @@ export default function HomeScreen() {
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem('token');
-    router.replace('/login');
+    router.replace('/');
   };
 
   const renderItem = ({ item }) => (
@@ -68,42 +70,57 @@ export default function HomeScreen() {
   );
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.logout} onPress={handleLogout}>
-        <Ionicons name="log-out-outline" size={24} color="#fff" />
-      </TouchableOpacity>
 
-      <TextInput
-        placeholder="Search product..."
-        value={searchQuery}
-        onChangeText={handleSearch}
-        style={styles.search}
-      />
+    <SafeAreaView style={styles.safe}>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.logout} onPress={handleLogout}>
+          <Ionicons name="log-out-outline" size={24} color="#fff" />
+        </TouchableOpacity>
 
-      {filtered.length === 0 ? (
-        <Text style={styles.empty}>No Product Found</Text>
-      ) : (
-        <FlatList
-          data={filtered}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderItem}
-          numColumns={2}
-          columnWrapperStyle={styles.row}
+        <TextInput
+          placeholder="Search product..."
+          value={searchQuery}
+          onChangeText={handleSearch}
+          style={styles.search}
         />
-      )}
 
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={() => router.push('/add-product')}
-      >
-        <Ionicons name="add" size={30} color="#fff" />
-      </TouchableOpacity>
-    </View>
+        {filtered.length === 0 ? (
+          <Text style={styles.empty}>No Product Found</Text>
+        ) : (
+          <FlatList
+            data={filtered}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderItem}
+            numColumns={2}
+            columnWrapperStyle={styles.row}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
+
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={() => router.push('/add-product')}
+        >
+          <Ionicons name="add" size={30} color="#fff" />
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+      
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 15, backgroundColor: '#fff' },
+  safe: {
+    paddingTop: 50, 
+    flex: 10,
+    backgroundColor: '#fff',
+  },
+  container: {
+    flex: 1,
+    padding: 15,
+    paddingTop: 10,
+  },
   logout: {
     alignSelf: 'flex-end',
     backgroundColor: '#007bff',
@@ -127,22 +144,20 @@ const styles = StyleSheet.create({
   row: {
     justifyContent: 'space-between',
   },
-card: {
-  width: '48%', 
-  marginBottom: 12,
-  backgroundColor: '#fff',
-  borderRadius: 12,
-  padding: 10,
-  borderWidth: 1,
-  borderColor: '#eee',
-  position: 'relative',
-},
-
+  card: {
+    width: '48%',
+    marginBottom: 10,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#eee',
+    position: 'relative',
+  },
   image: {
     width: '100%',
     height: 100,
     resizeMode: 'contain',
-    borderRadius: 8,
   },
   trashIcon: {
     position: 'absolute',
