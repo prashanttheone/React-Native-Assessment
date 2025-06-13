@@ -4,10 +4,12 @@ import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
     FlatList,
-    Image, StyleSheet,
-    Text, TextInput,
+    Image,
+    StyleSheet,
+    Text,
+    TextInput,
     TouchableOpacity,
-    View
+    View,
 } from 'react-native';
 import { getProducts, saveProducts } from '../utils/storage';
 
@@ -32,7 +34,7 @@ export default function HomeScreen() {
   };
 
   const handleDelete = async (id) => {
-    const updated = products.filter(p => p.id !== id);
+    const updated = products.filter((p) => p.id !== id);
     setProducts(updated);
     setFiltered(updated);
     await saveProducts(updated);
@@ -40,7 +42,7 @@ export default function HomeScreen() {
 
   const handleSearch = (text) => {
     setSearchQuery(text);
-    const filteredList = products.filter(p =>
+    const filteredList = products.filter((p) =>
       p.name.toLowerCase().includes(text.toLowerCase())
     );
     setFiltered(filteredList);
@@ -54,13 +56,14 @@ export default function HomeScreen() {
   const renderItem = ({ item }) => (
     <View style={styles.card}>
       <Image source={{ uri: item.image }} style={styles.image} />
-      <View style={{ flex: 1 }}>
-        <Text style={styles.name}>{item.name}</Text>
-        <Text style={styles.price}>₹ {item.price}</Text>
-      </View>
-      <TouchableOpacity onPress={() => handleDelete(item.id)}>
-        <Ionicons name="trash" size={24} color="red" />
+      <TouchableOpacity
+        onPress={() => handleDelete(item.id)}
+        style={styles.trashIcon}
+      >
+        <Ionicons name="trash" size={20} color="red" />
       </TouchableOpacity>
+      <Text style={styles.name}>{item.name}</Text>
+      <Text style={styles.price}>₹ {item.price}</Text>
     </View>
   );
 
@@ -84,6 +87,8 @@ export default function HomeScreen() {
           data={filtered}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
+          numColumns={2}
+          columnWrapperStyle={styles.row}
         />
       )}
 
@@ -113,20 +118,47 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 15,
   },
-  empty: { textAlign: 'center', color: '#777', marginTop: 30, fontSize: 16 },
-  card: {
-    flexDirection: 'row',
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 10,
-    marginBottom: 10,
-    alignItems: 'center',
-    backgroundColor: '#f8f8f8',
+  empty: {
+    textAlign: 'center',
+    color: '#777',
+    marginTop: 30,
+    fontSize: 16,
   },
-  image: { width: 50, height: 50, borderRadius: 6, marginRight: 10 },
-  name: { fontSize: 16, fontWeight: 'bold' },
-  price: { fontSize: 14, color: '#333' },
+  row: {
+    justifyContent: 'space-between',
+  },
+card: {
+  width: '48%', 
+  marginBottom: 12,
+  backgroundColor: '#fff',
+  borderRadius: 12,
+  padding: 10,
+  borderWidth: 1,
+  borderColor: '#eee',
+  position: 'relative',
+},
+
+  image: {
+    width: '100%',
+    height: 100,
+    resizeMode: 'contain',
+    borderRadius: 8,
+  },
+  trashIcon: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+  },
+  name: {
+    marginTop: 8,
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  price: {
+    color: '#555',
+    marginTop: 4,
+    fontSize: 13,
+  },
   fab: {
     position: 'absolute',
     right: 20,
