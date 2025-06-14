@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Menu, Provider, Text } from 'react-native-paper';
 
@@ -48,7 +48,7 @@ export default function Category({ onSelect }) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginBottom: 15,
+    position: 'relative',
     zIndex: 10,
   },
   dropdown: {
@@ -66,11 +66,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   menuStyle: {
-    marginVertical: -50,
     backgroundColor: '#fff',
     borderRadius: 8,
-    paddingVertical: 15,
-    width: '100%'
+    paddingVertical: 10,
+    width: 180,
   },
   menuItemText: {
     fontSize: 15,
